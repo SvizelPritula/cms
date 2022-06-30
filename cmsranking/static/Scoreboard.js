@@ -154,7 +154,7 @@ var Scoreboard = new function () {
 <col class=\"sel\"/> \
 <col class=\"rank\"/> \
 <col class=\"f_name\"/> <col/><col/><col/><col/><col/><col/><col/><col/><col/> \
-<col class=\"l_name\"/> <col/><col/><col/><col/><col/><col/><col/><col/><col/> \
+<col/><col/><col/><col/><col/><col/> \
 <col class=\"team\"/>";
 
         var contests = DataStore.contest_list;
@@ -188,8 +188,7 @@ var Scoreboard = new function () {
 <tr> \
     <th class=\"sel\"></th> \
     <th class=\"rank\">Rank</th> \
-    <th colspan=\"10\" class=\"f_name\">First Name</th> \
-    <th colspan=\"10\" class=\"l_name\">Last Name</th> \
+    <th colspan=\"16\" class=\"f_name\">Name</th> \
     <th class=\"team\">Team</th>";
 
         var contests = DataStore.contest_list;
@@ -235,15 +234,14 @@ var Scoreboard = new function () {
 <tr class=\"user" + (user["selected"] > 0 ? " selected color" + user["selected"] : "") + "\" data-user=\"" + user["key"] + "\"> \
     <td class=\"sel\"></td> \
     <td class=\"rank\">" + user["rank"] + "</td> \
-    <td colspan=\"10\" class=\"f_name\">" + escapeHTML(user["f_name"]) + "</td> \
-    <td colspan=\"10\" class=\"l_name\">" + escapeHTML(user["l_name"]) + "</td>";
+    <td colspan=\"16\" class=\"f_name\">" + escapeHTML(user["f_name"]) + " " + escapeHTML(user["l_name"]) + "</td>";
 
         if (user['team']) {
             result += " \
-    <td class=\"team\"><img src=\"" + Config.get_flag_url(user["team"]) + "\" title=\"" + DataStore.teams[user["team"]]["name"] + "\" /></td>";
+    <td class=\"team\" title=\"" + DataStore.teams[user["team"]]["name"] + "\">" + user['key'] + "</td>";
         } else {
             result += " \
-    <td class=\"team\"></td>";
+    <td class=\"team\">" + user['key'] + "</td>";
         }
 
         var contests = DataStore.contest_list;
@@ -405,11 +403,10 @@ var Scoreboard = new function () {
 
         $row.children("td.f_name").text(user["f_name"]);
         $row.children("td.l_name").text(user["l_name"]);
-
+        
+        $row.children(".team").text(user['key']);
         if (user["team"]) {
-            $row.children(".team").html("<img src=\"" + Config.get_flag_url(user["team"]) + "\" title=\"" + DataStore.teams[user["team"]]["name"] + "\" />");
-        } else {
-            $row.children(".team").text("");
+            $row.children(".team").attr("title", DataStore.teams[user["team"]]["name"]);
         }
     };
 
