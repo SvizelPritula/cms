@@ -26,6 +26,7 @@ task_info = {
     "memory_limit_{{dataset_id}}": "128",
     "task_type_{{dataset_id}}": "OutputOnly",
     "TaskTypeOptions_{{dataset_id}}_OutputOnly_output_eval": "comparator",
+    "TaskTypeOptions_{{dataset_id}}_OutputOnly_filename_template": "%t.out",
     "score_type_{{dataset_id}}": "Sum",
     "score_type_parameters_{{dataset_id}}": "50",
 }

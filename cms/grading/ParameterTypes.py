@@ -119,8 +119,17 @@ class ParameterTypeString(ParameterType):
     TEMPLATE = GLOBAL_ENVIRONMENT.from_string("""
 <input type="text"
        name="{{ prefix ~ parameter.short_name }}"
-       value="{{ previous_value }}" />
+       value="{{ previous_value if previous_value else parameter.default }}" />
 """)
+
+    def __init__(self, name, short_name, description, default):
+        """Initialization.
+
+        default (self): the default value
+
+        """
+        super().__init__(name, short_name, description)
+        self.default = default
 
     def validate(self, value):
         if not isinstance(value, str):
@@ -137,8 +146,17 @@ class ParameterTypeInt(ParameterType):
     TEMPLATE = GLOBAL_ENVIRONMENT.from_string("""
 <input type="text"
        name="{{ prefix ~ parameter.short_name }}"
-       value="{{ previous_value }}" />
+       value="{{ previous_value if previous_value else parameter.default }}" />
 """)
+
+    def __init__(self, name, short_name, description, default):
+        """Initialization.
+
+        default (int): the default value
+
+        """
+        super().__init__(name, short_name, description)
+        self.default = default
 
     def validate(self, value):
         if not isinstance(value, int):

@@ -25,7 +25,7 @@
 
 import logging
 
-from cms.grading.ParameterTypes import ParameterTypeChoice
+from cms.grading.ParameterTypes import ParameterTypeChoice, ParameterTypeString
 from . import TaskType, eval_output
 
 
@@ -49,9 +49,9 @@ class OutputOnly(TaskType):
     """
     # Codename of the checker, if it is used.
     CHECKER_CODENAME = "checker"
-    # Template for the filename of the output files provided by the user; %s
+    # Default template for the filename of the output files provided by the user; %s
     # represent the testcase codename.
-    USER_OUTPUT_FILENAME_TEMPLATE = "%s.out"
+    USER_OUTPUT_DEFAULT_FILENAME_TEMPLATE = "output_%t.txt"
 
     # Constants used in the parameter definition.
     OUTPUT_EVAL_DIFF = "diff"
@@ -67,7 +67,13 @@ class OutputOnly(TaskType):
         {OUTPUT_EVAL_DIFF: "Outputs compared with white diff",
          OUTPUT_EVAL_CHECKER: "Outputs are compared by a comparator"})
 
-    ACCEPTED_PARAMETERS = [_EVALUATION]
+    _USER_OUTPUT_FILENAME_TEMPLATE = ParameterTypeString(
+        "Filename template",
+        "filename_template",
+        "Controls how submitted files are matched to testcases. %t will be replaced with the testcase codename",
+        USER_OUTPUT_DEFAULT_FILENAME_TEMPLATE)
+
+    ACCEPTED_PARAMETERS = [_EVALUATION, _USER_OUTPUT_FILENAME_TEMPLATE]
 
     @property
     def name(self):
@@ -80,6 +86,7 @@ class OutputOnly(TaskType):
     def __init__(self, parameters):
         super().__init__(parameters)
         self.output_eval = self.parameters[0]
+        self.filename_template = self.parameters[1]
 
     def get_compilation_commands(self, unused_submission_format):
         """See TaskType.get_compilation_commands."""
@@ -96,10 +103,8 @@ class OutputOnly(TaskType):
     def _uses_checker(self):
         return self.output_eval == OutputOnly.OUTPUT_EVAL_CHECKER
 
-    @staticmethod
-    def _get_user_output_filename(job):
-        return OutputOnly.USER_OUTPUT_FILENAME_TEMPLATE % \
-            job.operation.testcase_codename
+    def _get_user_output_filename(self, job):
+        return self.filename_template.replace("%t", job.operation.testcase_codename)
 
     def compile(self, job, file_cacher):
         """See TaskType.compile."""
