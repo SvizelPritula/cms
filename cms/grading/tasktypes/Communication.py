@@ -102,7 +102,8 @@ class Communication(TaskType):
     _NUM_PROCESSES = ParameterTypeInt(
         "Number of Processes",
         "num_processes",
-        "")
+        "",
+        1)
 
     _COMPILATION = ParameterTypeChoice(
         "Compilation",
@@ -347,7 +348,7 @@ class Communication(TaskType):
         # Start the user submissions compiled with the stub.
         language = get_language(job.language)
         main = self.STUB_BASENAME if self._uses_stub() \
-               else os.path.splitext(executable_filename)[0]
+            else os.path.splitext(executable_filename)[0]
         processes = [None for i in indices]
         for i in indices:
             args = []

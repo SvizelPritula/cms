@@ -46,7 +46,7 @@ class TestParameterTypeString(unittest.TestCase):
 
     def setUp(self):
         super().setUp()
-        self.p = ParameterTypeString("name", "shortname", "description")
+        self.p = ParameterTypeString("name", "shortname", "description", "default")
 
     def test_validate_success(self):
         self.p.validate("asd")
@@ -84,7 +84,7 @@ class TestParameterTypeInt(unittest.TestCase):
 
     def setUp(self):
         super().setUp()
-        self.p = ParameterTypeInt("name", "shortname", "description")
+        self.p = ParameterTypeInt("name", "shortname", "description", 1)
 
     def test_validate_success(self):
         self.p.validate(1)
@@ -161,8 +161,8 @@ class TestParameterTypeCollection(unittest.TestCase):
     def setUp(self):
         super().setUp()
         self.p = ParameterTypeCollection("name", "shortname", "description", [
-            ParameterTypeInt("name0", "shortname0", "desc0"),
-            ParameterTypeString("name1", "shortname1", "desc1"),
+            ParameterTypeInt("name0", "shortname0", "desc0", 1),
+            ParameterTypeString("name1", "shortname1", "desc1", "def1"),
             ParameterTypeChoice("name2", "shortname2", "desc2", {
                 "c1": "First choice",
                 "c2": "Second choice",

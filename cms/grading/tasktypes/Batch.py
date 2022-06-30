@@ -98,8 +98,8 @@ class Batch(TaskType):
         "io",
         "",
         [
-            ParameterTypeString("Input file", "inputfile", ""),
-            ParameterTypeString("Output file", "outputfile", ""),
+            ParameterTypeString("Input file", "inputfile", "", ""),
+            ParameterTypeString("Output file", "outputfile", "", ""),
         ])
 
     _EVALUATION = ParameterTypeChoice(
