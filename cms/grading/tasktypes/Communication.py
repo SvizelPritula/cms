@@ -261,12 +261,19 @@ class Communication(TaskType):
             os.path.join(fifo_dir[i], "u%d_to_m" % i) for i in indices]
         fifo_manager_to_user = [
             os.path.join(fifo_dir[i], "m_to_u%d" % i) for i in indices]
+        
+        fifos = []
+
         for i in indices:
             os.mkfifo(fifo_user_to_manager[i])
             os.mkfifo(fifo_manager_to_user[i])
             os.chmod(fifo_dir[i], 0o755)
             os.chmod(fifo_user_to_manager[i], 0o666)
             os.chmod(fifo_manager_to_user[i], 0o666)
+
+            fifos.append(os.open(fifo_user_to_manager[i], os.O_RDWR))
+            fifos.append(os.open(fifo_manager_to_user[i], os.O_RDWR))
+
         # Names of the fifos after being mapped inside the sandboxes.
         sandbox_fifo_dir = ["/fifo%d" % i for i in indices]
         sandbox_fifo_user_to_manager = [
@@ -362,6 +369,9 @@ class Communication(TaskType):
 
         # Wait for the processes to conclude, without blocking them on I/O.
         wait_without_std(processes + [manager])
+
+        for fifo in fifos:
+            os.close(fifo)
 
         # Get the results of the manager sandbox.
         box_success_mgr, evaluation_success_mgr, unused_stats_mgr = \

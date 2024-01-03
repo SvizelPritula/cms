@@ -7,11 +7,8 @@ import sys
 
 fifo_path_from_user, fifo_path_to_user = sys.argv[1:]
 
-# When the sandbox opens the other endpoints of these fifos to redirect
-# them to to stdin/out it does so first for stdin and then for stdout.
-# We must match that order as otherwise we would deadlock.
-fifo_to_user = io.open(fifo_path_to_user, "wb", buffering=0)
 fifo_from_user = io.open(fifo_path_from_user, "rb", buffering=0)
+fifo_to_user = io.open(fifo_path_to_user, "wb", buffering=0)
 
 input_value = int(io.open("input.txt", "rb").readline())
 
